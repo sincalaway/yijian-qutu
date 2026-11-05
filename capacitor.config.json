@@ -1,0 +1,10 @@
+{
+  "appId": "com.yijian.qutu",
+  "appName": "一键取图",
+  "webDir": "www",
+  "android": { "allowMixedContent": true },
+  "plugins": {
+    "CapacitorHttp": { "enabled": true },
+    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#8B0000" }
+  }
+}

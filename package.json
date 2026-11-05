@@ -1,0 +1,25 @@
+{
+  "name": "yijian-qutu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "一键取图：免费实用图片处理工具集合（Web/PWA + Android APK）",
+  "scripts": {
+    "dev": "npx serve www -l 5173",
+    "android:add": "npx cap add android",
+    "android:icons": "npx @capacitor/assets generate --android",
+    "android:sync": "npx cap sync android",
+    "android:open": "npx cap open android",
+    "apk": "npx cap sync android && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/filesystem": "^7.0.0",
+    "@capacitor/share": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.0.0"
+  }
+}
