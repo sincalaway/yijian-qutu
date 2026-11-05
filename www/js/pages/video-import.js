@@ -27,10 +27,10 @@ export default {
     let file = null, audio = null
     root.innerHTML = `<div class="card" id="box">${uploadBox('从相册导入视频', '🎬')}</div>
       <div class="card"><div class="card-title">选择操作</div>
-        <div class="vi-grid">
-          <div class="vi" data-a="frame"><span class="vi-ic" style="background:#8B0000">帧</span><b>视频取图</b><small>截帧 / 批量抽帧</small></div>
-          <div class="vi" data-a="audio"><span class="vi-ic" style="background:#7048e8">音</span><b>提取音频</b><small>导出无损 WAV</small></div>
-          <div class="vi" data-a="text"><span class="vi-ic" style="background:#e8590c">文</span><b>提取文案</b><small>语音转文字</small></div>
+        <div class="vi-list">
+          <div class="vi" data-a="frame"><span class="vi-ic" style="background:#8B0000">帧</span><div class="vi-t"><b>视频取图</b><small>截取当前帧 / 批量均匀抽帧</small></div><span class="vi-arrow">›</span></div>
+          <div class="vi" data-a="audio"><span class="vi-ic" style="background:#7048e8">音</span><div class="vi-t"><b>提取音频</b><small>分离视频原声，导出无损 WAV</small></div><span class="vi-arrow">›</span></div>
+          <div class="vi" data-a="text"><span class="vi-ic" style="background:#e8590c">文</span><div class="vi-t"><b>提取文案</b><small>语音转文字</small></div><span class="vi-arrow">›</span></div>
         </div></div>
       <div id="out"></div>${cleanTip('所有处理数据 24 小时后系统自动清除')}
       <div class="footer"><button class="btn" id="pick">导入视频</button></div>`

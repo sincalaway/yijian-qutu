@@ -33,8 +33,9 @@ export default {
 
     const drawOpts = () => {
       const d = video && video.duration && isFinite(video.duration) ? video.duration : 0
-      $('#opts').innerHTML = `${mode !== 'crop' ? `<div class="row"><span>处理方式</span><div class="chips" id="eff">
-          <div class="chip ${effect === 'blur' ? 'on' : ''}" data-e="blur">模糊</div><div class="chip ${effect === 'mosaic' ? 'on' : ''}" data-e="mosaic">马赛克</div><div class="chip ${effect === 'fill' ? 'on' : ''}" data-e="fill">邻近填充</div></div></div>` : ''}
+      $('#opts').style.display = d ? '' : 'none'
+      $('#opts').innerHTML = `${mode !== 'crop' ? `<div class="opt-label">处理方式</div><div class="chips opt-chips" id="eff">
+          <div class="chip ${effect === 'blur' ? 'on' : ''}" data-e="blur">模糊</div><div class="chip ${effect === 'mosaic' ? 'on' : ''}" data-e="mosaic">马赛克</div><div class="chip ${effect === 'fill' ? 'on' : ''}" data-e="fill">邻近填充</div></div>` : ''}
         <div class="row"><span>开始</span><span class="red" id="sv">${fmtT(start)}</span></div>
         <input type="range" id="st" min="0" max="1000" value="${d ? Math.round(start / d * 1000) : 0}" ${d ? '' : 'disabled'}>
         <div class="row"><span>结束</span><span class="red" id="ev">${fmtT(end)}</span></div>
