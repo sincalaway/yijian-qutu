@@ -3,10 +3,11 @@ import { openItem } from './home.js'
 
 const items = [
   { name: '视频取图', desc: '任意帧高清截取、批量抽帧', icon: '帧', color: '#8B0000', url: '/frame', hot: true },
-  { name: '提取音频', desc: '从视频中分离背景音乐和人声', icon: '音', color: '#7048e8', api: 'audio' },
-  { name: '提取文案', desc: '语音识别成文字，一键复制', icon: '文', color: '#e8590c', api: 'text' },
-  { name: '去字幕', desc: '智能擦除视频硬字幕', icon: '字', color: '#1098ad', api: 'subtitle' },
-  { name: '视频提取裁剪', desc: '截取片段、裁剪画面', icon: '剪', color: '#2b8a3e', api: 'videoCrop' },
+  { name: '提取音频', desc: '从视频中提取原声，导出 WAV', icon: '音', color: '#7048e8', url: '/video-import' },
+  { name: '提取文案', desc: '语音识别成文字，一键复制', icon: '文', color: '#e8590c', url: '/video-import' },
+  { name: '去字幕', desc: '框选字幕区域，模糊 / 马赛克 / 填充', icon: '字', color: '#1098ad', url: '/video-tool?mode=subtitle' },
+  { name: '视频提取裁剪', desc: '截取片段、裁剪画面', icon: '剪', color: '#2b8a3e', url: '/video-tool?mode=crop' },
+  { name: '视频去水印', desc: '框选水印位置一键抹除', icon: '净', color: '#c2255c', url: '/video-tool?mode=watermark' },
   { name: '粘贴链接', desc: '粘贴图片/网页链接直接取图', icon: '链', color: '#d6336c', url: '/link', hot: true }
 ]
 

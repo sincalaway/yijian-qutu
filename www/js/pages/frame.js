@@ -2,6 +2,7 @@
 import { uploadBox, cleanTip, pickFiles, toast, loading, hideLoading, fail } from '../ui.js'
 import { makeCanvas, canvasResult } from '../img.js'
 import { saveResults } from '../platform.js'
+import { shared } from '../shared.js'
 
 const COUNTS = [6, 9, 12, 16]
 
@@ -36,7 +37,9 @@ export default {
       video.currentTime = t
     })
     const choose = async () => {
-      const [f] = await pickFiles({ accept: 'video/*' }); if (!f) return
+      const [f] = await pickFiles({ accept: 'video/*' }); if (f) loadVideo(f)
+    }
+    const loadVideo = f => {
       $('#box').innerHTML = `<video class="player" id="v" src="${URL.createObjectURL(f)}" controls playsinline preload="auto"></video>
         <div class="tip">暂停到想要的画面，点「截取当前帧」</div>
         <div class="row"><span class="label">均匀抽帧数量</span><div class="chips" id="cnt">${COUNTS.map((n, i) => `<div class="chip ${i === ci ? 'on' : ''}" data-i="${i}">${n}张</div>`).join('')}</div></div>
@@ -64,6 +67,7 @@ export default {
     }
     root.addEventListener('click', e => { if (e.target.closest('#up')) choose() })
     $('#pick').onclick = choose
+    if (shared.video) { loadVideo(shared.video); shared.video = null }
     $('#snap').onclick = async () => {
       if (!video) return
       try { video.pause(); frames.push(await grab()); drawFrames(); toast('已截取') } catch (e) { fail(e) }

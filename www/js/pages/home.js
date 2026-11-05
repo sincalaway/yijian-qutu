@@ -10,14 +10,14 @@ const slides = [
 const quick = [
   { name: '粘贴链接', icon: '链', hot: true, url: '/link' },
   { name: '视频取图', icon: '帧', url: '/frame' },
-  { name: '提取音频', icon: '音', api: 'audio' },
-  { name: '提取文案', icon: '文', api: 'text' },
-  { name: '去字幕', icon: '字', api: 'subtitle' }
+  { name: '提取音频', icon: '音', url: '/video-import' },
+  { name: '提取文案', icon: '文', url: '/video-import' },
+  { name: '去字幕', icon: '字', url: '/video-tool?mode=subtitle' }
 ]
 const tools = [
   { name: '图片尺寸裁剪', desc: '批量尺寸修改、裁剪、切图', icon: '裁', color: '#8B0000', bg: '#ffffff', btn: '去使用', url: '/crop' },
   { name: '图片格式转换', desc: 'JPG / PNG / WEBP / BMP 互转', icon: '转', color: '#3b5bdb', bg: '#f3f6ff', btn: '去使用', url: '/convert' },
-  { name: '图片视频提取', desc: '视频抽帧、图片提取', icon: '取', color: '#e8590c', bg: '#fff6ef', btn: '去使用', url: '/frame' },
+  { name: '图片视频提取', desc: '粘贴链接、视频取图、提取音频、去字幕', icon: '取', color: '#e8590c', bg: '#fff6ef', btn: '去使用', url: '/extract' },
   { name: '智能图片去水印', desc: '一键去除、涂抹去除', icon: '净', color: '#d6336c', bg: '#fff0f6', btn: '去使用', url: '/watermark', hot: true },
   { name: '图片压缩', desc: '无损压缩、自定义尺寸', icon: '压', color: '#2b8a3e', bg: '#f1fbf3', btn: '去使用', url: '/compress' },
   { name: '图片增强', desc: '清晰度增强、色彩修复、无损放大', icon: '清', color: '#7048e8', bg: '#f5f2ff', btn: '去使用', url: '/enhance' },
@@ -30,13 +30,8 @@ const mini = [
   { name: '图片消除笔', icon: '笔', color: '#d6336c', url: '/watermark-edit?mode=normal' },
   { name: '图片贴纸添加', icon: '贴', color: '#f08c00', soon: true },
   { name: '图片添加圆角', icon: '角', color: '#1098ad', url: '/rounded' },
-  { name: '视频提取裁剪', icon: '剪', color: '#7048e8', api: 'videoCrop' }
+  { name: '视频提取裁剪', icon: '剪', color: '#7048e8', url: '/video-tool?mode=crop' }
 ]
-const ads = [
-  { title: '《重生之我在豪门当千金》', tag: '短剧 · 全集免费看' },
-  { title: '《闪婚后，总裁每天都在追妻》', tag: '短剧 · 热播榜第 1' }
-]
-
 export function openItem(it) {
   if (!it) return
   if (it.url) return go(it.url)
@@ -73,15 +68,12 @@ export default {
       <div class="mini-grid">${mini.map((m, i) => `<div class="mini" data-l="mini" data-i="${i}">
         <div class="mini-icon" style="color:${m.color};border-color:${m.color}">${m.icon}</div><span>${m.name}</span></div>`).join('')}</div>
 
-      ${ads.map(a => `<div class="ad"><div class="ad-cover">▶</div><div class="ad-main"><div class="ad-title">${a.title}</div><div class="ad-tag">${a.tag}</div></div><div class="ad-flag">广告</div></div>`).join('')}
-
       ${cleanTip()}
       <div class="footer above-tab"><button class="btn ghost" id="desk">添加到桌面</button><button class="btn" id="share">分享给好友</button></div>`
 
     const lists = { quick, tools, mini }
     root.querySelectorAll('[data-l]').forEach(n => { n.onclick = () => openItem(lists[n.dataset.l][n.dataset.i]) })
     root.querySelectorAll('[data-s]').forEach(n => { n.onclick = () => openItem(slides[n.dataset.s]) })
-    root.querySelectorAll('.ad').forEach(n => { n.onclick = () => toast('广告位（接入广告 SDK 后展示）') })
     root.querySelector('#desk').onclick = addDesktop
     root.querySelector('#share').onclick = shareApp
 

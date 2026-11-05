@@ -22,13 +22,17 @@ import dedup from './pages/dedup.js'
 import rounded from './pages/rounded.js'
 import frame from './pages/frame.js'
 import link from './pages/link.js'
+import extract from './pages/extract.js'
+import videoImport from './pages/video-import.js'
+import videoTool from './pages/video-tool.js'
 
 const routes = {
   '/': home, '/roi': roi, '/video': video, '/mine': mine,
   '/compress': compress, '/convert': convert, '/watermark': watermark, '/watermark-edit': watermarkEdit,
   '/stitch': stitch, '/crop': crop, '/cropper': cropper, '/resize': resize, '/smart-crop': smartCrop,
   '/slice': slice, '/enhance': enhance, '/add-watermark': addWatermark, '/dedup': dedup,
-  '/rounded': rounded, '/frame': frame, '/link': link
+  '/rounded': rounded, '/frame': frame, '/link': link,
+  '/extract': extract, '/video-import': videoImport, '/video-tool': videoTool
 }
 
 const TABS = [
