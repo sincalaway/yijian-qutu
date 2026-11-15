@@ -29,6 +29,9 @@ jobs:
       - name: Install
         run: npm install
 
+      - name: Fetch AI model & runtime
+        run: bash scripts/fetch-ai.sh
+
       - name: Add Android platform
         run: npx cap add android
 

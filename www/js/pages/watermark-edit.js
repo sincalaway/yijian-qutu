@@ -1,6 +1,7 @@
 import { uploadBox, pickFiles, toast, loading, hideLoading, paint, modal, fail } from '../ui.js'
 import { loadImage, fitMax, makeCanvas, canvasResult } from '../img.js'
 import { rasterize, inpaint } from '../inpaint.js'
+import { lamaInpaint } from '../lama.js'
 import { saveResults } from '../platform.js'
 import config from '../config.js'
 
@@ -10,11 +11,12 @@ export default {
     const pro = q.get('mode') === 'pro'
     let work = null, wctx = null   // 处理分辨率的画布（当前结果）
     let view = null, vctx = null, vw = 0, vh = 0, k = 1
-    let strokes = [], cur = null, history = [], brush = 24, edited = false
+    let strokes = [], cur = null, history = [], brush = 24, edited = false, engine = 'ai'
 
     root.innerHTML = `<div class="editor">
       <div class="stage" id="stage">${uploadBox('上传带水印的图片')}</div>
       <div class="panel">
+        <div class="opt-chips eng" id="eng"><div class="chip on" data-e="ai">AI 修复（推荐）</div><div class="chip" data-e="fast">快速填充</div></div>
         <div class="row"><span class="label">画笔大小</span><span class="brush-dot" id="dot" style="width:24px;height:24px"></span></div>
         <input type="range" id="brush" min="8" max="80" value="24">
         <div class="tools">
@@ -24,7 +26,7 @@ export default {
           ${pro ? '<div class="t" id="tAuto">✨<span>一键去除</span></div>' : ''}
           <div class="t" id="tSave">⤓<span>保存</span></div>
         </div>
-        <div class="clean-tip">涂抹红色区域覆盖水印 · 数据 24 小时后系统自动清除</div>
+        <div class="clean-tip" id="engTip">AI 在手机本地运行，复杂背景也能自然补全 · 数据 24 小时后系统自动清除</div>
       </div>
       <div class="footer"><button class="btn ghost" id="pick">上传图片</button><button class="btn ${pro ? 'pink' : ''}" id="go" disabled>开始去除</button></div>
     </div>`
@@ -98,6 +100,12 @@ export default {
       else if (history.length) { wctx.putImageData(history.pop(), 0, 0) }
       redraw(); sync()
     }
+    $('#eng').onclick = e => {
+      const c = e.target.closest('.chip'); if (!c) return
+      engine = c.dataset.e
+      root.querySelectorAll('#eng .chip').forEach(n => n.classList.toggle('on', n === c))
+      $('#engTip').textContent = engine === 'ai' ? 'AI 在手机本地运行，复杂背景也能自然补全 · 数据 24 小时后系统自动清除' : '用周围颜色向内填充，适合纯色背景 · 数据 24 小时后系统自动清除'
+    }
     $('#tClear').onclick = () => { strokes = []; redraw(); sync() }
     $('#go').onclick = async () => {
       if (!strokes.length) return toast('请先涂抹水印区域')
@@ -107,8 +115,16 @@ export default {
         history.push(new ImageData(new Uint8ClampedArray(id.data), id.width, id.height))
         if (history.length > 8) history.shift()
         const mask = rasterize(strokes, work.width, work.height, pro ? 2 : 0)
-        inpaint(id.data, work.width, work.height, mask, pro ? 8 : 3)
-        wctx.putImageData(id, 0, 0)
+        let done = false
+        if (engine === 'ai') {
+          try { await lamaInpaint(work, mask, t => loading(t)); done = true } catch (err) {
+            console.warn('LaMa', err); toast('AI 模型加载失败，已改用快速填充')
+          }
+        }
+        if (!done) {
+          inpaint(id.data, work.width, work.height, mask, pro ? 8 : 3)
+          wctx.putImageData(id, 0, 0)
+        }
         strokes = []; edited = true
         hideLoading(); redraw(); sync()
         toast('已去除，可继续涂抹')

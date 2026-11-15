@@ -89,3 +89,13 @@ capacitor.config.json
 
 - 网页：直接下载；手机浏览器支持时调起系统分享面板。
 - App：调起系统分享面板，选「保存到相册 / 文件」或发给好友。
+
+## AI 去水印（LaMa，本机运行）
+
+普通 / 高级去水印默认用「AI 修复」：涂抹区域交给 LaMa 模型补全，复杂背景也不会糊；可切回「快速填充」（旧的边缘向内扩散算法）。
+
+- 模型：`lama_512_int8.onnx`（62MB，权重 int8 量化，固定 512×512 输入），来自 [g-ronimo/lama](https://huggingface.co/g-ronimo/lama)；原始模型 [advimman/lama](https://github.com/advimman/lama)（Samsung Research）。均为 Apache-2.0。
+- 运行时：onnxruntime-web 1.22.0（WASM），在 Web Worker 中推理，不卡界面。
+- 做法：遮罩按连通区域拆块，大块再切成 ≤384px，每块取 512 左右的周边画面原分辨率送进模型，结果只按羽化后的遮罩贴回。
+- APK 内置模型，离线可用；网页版首次使用下载一次（优先同站 `models/`，失败再走 Hugging Face），之后存进浏览器缓存。
+- 模型和运行时不入库：本地运行 `npm run fetch:ai` 下载，CI 构建前会自动下载。

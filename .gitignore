@@ -3,3 +3,5 @@ android/
 ios/
 *.apk
 .DS_Store
+www/models/*.onnx
+www/vendor/ort/
