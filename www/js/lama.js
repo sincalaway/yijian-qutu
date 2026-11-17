@@ -64,7 +64,10 @@ async function loadModel(onProgress) {
     } catch (e) {}
   }
   let got = null, from = MODEL_LOCAL
-  try { got = await download(MODEL_LOCAL, onProgress) } catch (e) {
+  try {
+    got = await download(MODEL_LOCAL, onProgress)
+    if (got.buf.byteLength !== MODEL_BYTES) throw new Error('not model') // Cloudflare 对不存在的路径会回退到首页
+  } catch (e) {
     try { got = await downloadParts(onProgress) } catch (e2) {
       from = MODEL_REMOTE
       got = await download(MODEL_REMOTE, onProgress)

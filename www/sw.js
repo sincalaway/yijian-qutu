@@ -1,5 +1,5 @@
 // 离线缓存：应用外壳缓存优先，更新版本号即可刷新
-const VERSION = 'qutu-v5'
+const VERSION = 'qutu-v6'
 const KEEP = ['qutu-models-v1']
 const SHELL = ['./', './index.html', './css/app.css', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png']
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())) })

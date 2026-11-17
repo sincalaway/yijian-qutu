@@ -20,7 +20,7 @@
 推送到 `main` 后自动部署到 GitHub Pages：`https://sincalaway.github.io/yijian-qutu/`
 （首次需在仓库 Settings → Pages → Source 选择 **GitHub Actions**）
 
-同时部署到 Cloudflare Pages（`.github/workflows/cloudflare.yml`）：仓库 Secrets 配置 `CLOUDFLARE_API_TOKEN`（Cloudflare Pages 编辑权限）与 `CLOUDFLARE_ACCOUNT_ID` 后自动生效，地址 `https://yijian-qutu.pages.dev`。Cloudflare 单文件上限 25MB，模型以 3 个分片托管，浏览器加载时拼接。
+同时通过 Cloudflare Pages 的 Git 集成自动部署到 `https://yijian-qutu.pages.dev`（构建命令 `SPLIT_MODEL=1 bash scripts/fetch-ai.sh`，输出目录 `www`）。Cloudflare 单文件上限 25MB，模型以 3 个分片托管，浏览器加载时拼接。
 
 ## 功能
 
