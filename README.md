@@ -82,7 +82,8 @@ www/                 网页源码（部署这个目录）
   js/inpaint.js      涂抹去水印算法
   js/filters.js      锐化、色彩、隐形水印
   js/pages/*.js      各页面
-assets/              App 图标、启动图源文件
+assets/              App 图标、启动图源文件；favicon-1024.png 为网站图标源图
+scripts/make-icons.py  由 assets/icon-only.png 生成 www/favicon.ico 与 www/icons/*（网站图标）
 capacitor.config.json
 .github/workflows/   android.yml（出 APK）、pages.yml（部署网页）
 ```
