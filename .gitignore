@@ -5,3 +5,4 @@ ios/
 .DS_Store
 www/models/*.onnx
 www/vendor/ort/
+www/models/*.part*

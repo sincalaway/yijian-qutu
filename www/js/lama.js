@@ -4,6 +4,8 @@ import { isNative } from './platform.js'
 
 const MODEL_LOCAL = new URL('../models/lama_512_int8.onnx', import.meta.url).href
 const MODEL_REMOTE = 'https://huggingface.co/g-ronimo/lama/resolve/main/lama_512_int8.onnx'
+const MODEL_PARTS = [0, 1, 2].map(i => new URL(`../models/lama_512_int8.onnx.part${i}`, import.meta.url).href) // Cloudflare Pages 单文件 ≤25MB，分片托管
+const MODEL_BYTES = 62074990
 const CACHE = 'qutu-models-v1'
 const SIZE = 512
 
@@ -21,7 +23,7 @@ function call(msg, transfer) {
 async function download(url, onProgress) {
   const r = await fetch(url)
   if (!r.ok) throw new Error('HTTP ' + r.status)
-  const total = +r.headers.get('content-length') || 62074990
+  const total = +r.headers.get('content-length') || MODEL_BYTES
   if (!r.body || !r.body.getReader) return { buf: await r.arrayBuffer(), res: null }
   const reader = r.body.getReader(), parts = []
   let got = 0
@@ -37,6 +39,21 @@ async function download(url, onProgress) {
   return { buf: buf.buffer, type: r.headers.get('content-type') }
 }
 
+// 分片下载后拼接
+async function downloadParts(onProgress) {
+  const bufs = []
+  let done = 0
+  for (const url of MODEL_PARTS) {
+    const g = await download(url, p => onProgress && onProgress(Math.min(1, (done + p * (MODEL_BYTES / MODEL_PARTS.length)) / MODEL_BYTES)))
+    bufs.push(new Uint8Array(g.buf)); done += g.buf.byteLength
+  }
+  const out = new Uint8Array(done)
+  let o = 0
+  for (const b of bufs) { out.set(b, o); o += b.length }
+  if (done !== MODEL_BYTES) throw new Error('模型分片不完整')
+  return { buf: out.buffer }
+}
+
 async function loadModel(onProgress) {
   const hasCache = !isNative && 'caches' in self
   if (hasCache) {
@@ -48,8 +65,10 @@ async function loadModel(onProgress) {
   }
   let got = null, from = MODEL_LOCAL
   try { got = await download(MODEL_LOCAL, onProgress) } catch (e) {
-    from = MODEL_REMOTE
-    got = await download(MODEL_REMOTE, onProgress)
+    try { got = await downloadParts(onProgress) } catch (e2) {
+      from = MODEL_REMOTE
+      got = await download(MODEL_REMOTE, onProgress)
+    }
   }
   if (got.buf.byteLength < 1e7) throw new Error('模型文件不完整')
   if (hasCache) {
